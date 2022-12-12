@@ -79,7 +79,22 @@ export class AppController {
   }
 
   @Put(':id')
-  updateReport() {
-    return { message: 'Report deleted' };
+  updateReport(
+    @Param('typeOfTransaction') type: TypeOfTransaction,
+    @Param('id') id: string,
+    @Body() body: { amount: number; source: string; currency: string },
+  ) {
+    const transactionType = getType(type);
+    const reportToUpdate = data.reports.find((report) => report.id === id);
+    if (
+      reportToUpdate &&
+      reportToUpdate.typeOfTransaction === transactionType
+    ) {
+      reportToUpdate.amount = body.amount;
+      reportToUpdate.source = body.source;
+      reportToUpdate.currency = body.currency;
+      reportToUpdate.updatedAt = new Date();
+    }
+    return { message: 'Report updated', reportToUpdate };
   }
 }
