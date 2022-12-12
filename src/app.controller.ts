@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  HttpCode,
 } from '@nestjs/common';
 import { data, TypeOfTransaction, Report } from './data';
 import { getType } from './helper/helpers';
@@ -61,6 +62,7 @@ export class AppController {
     return { message: 'Report created', newReport };
   }
 
+  @HttpCode(204)
   @Delete(':id')
   deleteReport(
     @Param('typeOfTransaction') type: TypeOfTransaction,
