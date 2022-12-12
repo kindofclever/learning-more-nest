@@ -100,3 +100,6 @@ export class AppController {
     return { message: 'Report updated', reportToUpdate };
   }
 }
+
+// controller is handling business logic
+// need to create a service to handle business logic
