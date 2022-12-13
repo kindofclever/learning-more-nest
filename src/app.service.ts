@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@nestjs/common';
+import { Injectable, Type, Body } from '@nestjs/common';
 import { Report, TypeOfTransaction } from './data';
 import { data } from './data';
 import { getType } from './helper/getType';
@@ -61,4 +61,10 @@ export class AppService {
 
     return { message: 'Report deleted' };
   }
+
+  updateReport(
+    type: TypeOfTransaction,
+    id: string,
+    body: { amount: number; source: string; currency: string },
+  ) {}
 }

@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { data, TypeOfTransaction, Report } from './data';
 import { getType } from './helper/getType';
-import { v4 as uuid } from 'uuid';
 import { AppService } from './app.service';
 
 @Controller('reports/:typeOfTransaction')
@@ -53,17 +52,6 @@ export class AppController {
     @Param('id') id: string,
     @Body() body: { amount: number; source: string; currency: string },
   ) {
-    const transactionType = getType(type);
-    const reportToUpdate = data.reports.find((report) => report.id === id);
-    if (
-      reportToUpdate &&
-      reportToUpdate.typeOfTransaction === transactionType
-    ) {
-      reportToUpdate.amount = body.amount;
-      reportToUpdate.source = body.source;
-      reportToUpdate.currency = body.currency;
-      reportToUpdate.updatedAt = new Date();
-    }
-    return { message: 'Report updated', reportToUpdate };
+    return this.appService.updateReport(type, id, body);
   }
 }
