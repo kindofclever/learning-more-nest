@@ -1,8 +1,14 @@
-import { Injectable, Type, Body } from '@nestjs/common';
+import { Injectable, Body } from '@nestjs/common';
 import { Report, TypeOfTransaction } from './data';
 import { data } from './data';
 import { getType } from './helper/getType';
 import { v4 as uuid } from 'uuid';
+
+interface Body {
+  amount: number;
+  source: string;
+  currency: string;
+}
 
 @Injectable()
 export class AppService {
@@ -27,10 +33,7 @@ export class AppService {
     }
   }
 
-  createReport(
-    type: TypeOfTransaction,
-    body: { amount: number; source: string; currency: string },
-  ) {
+  createReport(type: TypeOfTransaction, body: Body) {
     const newReport: Report = {
       id: uuid(),
       typeOfTransaction:
@@ -57,14 +60,22 @@ export class AppService {
       reportToDelete.typeOfTransaction === transactionType
     ) {
       data.reports.splice(data.reports.indexOf(reportToDelete), 1);
+      return { message: 'Report deleted' };
     }
-
-    return { message: 'Report deleted' };
   }
 
-  updateReport(
-    type: TypeOfTransaction,
-    id: string,
-    body: { amount: number; source: string; currency: string },
-  ) {}
+  updateReport(type: TypeOfTransaction, id: string, body: Body) {
+    const transactionType = getType(type);
+    const reportToUpdate = data.reports.find((report) => report.id === id);
+    if (
+      reportToUpdate &&
+      reportToUpdate.typeOfTransaction === transactionType
+    ) {
+      reportToUpdate.amount = body.amount;
+      reportToUpdate.source = body.source;
+      reportToUpdate.currency = body.currency;
+      reportToUpdate.updatedAt = new Date();
+    }
+    return { message: 'Report updated', reportToUpdate };
+  }
 }
