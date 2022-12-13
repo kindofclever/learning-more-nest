@@ -8,6 +8,7 @@ import {
   Body,
   HttpCode,
   ParseUUIDPipe,
+  ParseEnumPipe,
 } from '@nestjs/common';
 import { TypeOfTransaction } from './data';
 import { AppService } from './app.service';
@@ -17,13 +18,17 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getAllReports(@Param('typeOfTransaction') type: TypeOfTransaction) {
+  getAllReports(
+    @Param('typeOfTransaction', new ParseEnumPipe(TypeOfTransaction))
+    type: TypeOfTransaction,
+  ) {
     return this.appService.getAllReports(type);
   }
 
   @Get(':id')
   getReportById(
-    @Param('typeOfTransaction') type: TypeOfTransaction,
+    @Param('typeOfTransaction', new ParseEnumPipe(TypeOfTransaction))
+    type: TypeOfTransaction,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.appService.getReportById(type, id);
@@ -31,7 +36,8 @@ export class AppController {
 
   @Post()
   createReport(
-    @Param('typeOfTransaction') type: TypeOfTransaction,
+    @Param('typeOfTransaction', new ParseEnumPipe(TypeOfTransaction))
+    type: TypeOfTransaction,
     @Body() body: { amount: number; source: string; currency: string },
   ) {
     return this.appService.createReport(type, body);
@@ -40,7 +46,8 @@ export class AppController {
   @HttpCode(204)
   @Delete(':id')
   deleteReport(
-    @Param('typeOfTransaction') type: TypeOfTransaction,
+    @Param('typeOfTransaction', new ParseEnumPipe(TypeOfTransaction))
+    type: TypeOfTransaction,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.appService.deleteReport(type, id);
@@ -48,7 +55,8 @@ export class AppController {
 
   @Put(':id')
   updateReport(
-    @Param('typeOfTransaction') type: TypeOfTransaction,
+    @Param('typeOfTransaction', new ParseEnumPipe(TypeOfTransaction))
+    type: TypeOfTransaction,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: { amount: number; source: string; currency: string },
   ) {
