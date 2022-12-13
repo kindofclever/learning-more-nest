@@ -9,17 +9,17 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { data, TypeOfTransaction, Report } from './data';
-import { getType } from './helper/helpers';
+import { getType } from './helper/getType';
 import { v4 as uuid } from 'uuid';
+import { AppService } from './app.service';
 
 @Controller('reports/:typeOfTransaction')
 export class AppController {
+  constructor(private readonly appService: AppService) {}
+
   @Get()
   getAllReports(@Param('typeOfTransaction') type: TypeOfTransaction) {
-    const transactionType = getType(type);
-    return data.reports.filter(
-      (report) => report.typeOfTransaction === transactionType,
-    );
+    return this.appService.getAllReports(type);
   }
 
   @Get(':id')
@@ -27,16 +27,7 @@ export class AppController {
     @Param('typeOfTransaction') type: TypeOfTransaction,
     @Param('id') id: string,
   ) {
-    const transactionType = getType(type);
-    const specificReport = data.reports.find((report) => report.id === id);
-    if (
-      specificReport &&
-      specificReport.typeOfTransaction === transactionType
-    ) {
-      return specificReport;
-    } else {
-      return { message: 'There is no such report' };
-    }
+    return this.appService.getReportById(type, id);
   }
 
   @Post()

@@ -7,6 +7,6 @@ export const getType = (type: string) => {
     case 'expenses':
       return TypeOfTransaction.EXPENSES;
     default:
-      return { message: 'Invalid type of transaction' };
+      return;
   }
 };
