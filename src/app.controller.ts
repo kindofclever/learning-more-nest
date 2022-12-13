@@ -44,16 +44,7 @@ export class AppController {
     @Param('typeOfTransaction') type: TypeOfTransaction,
     @Param('id') id: string,
   ) {
-    const transactionType = getType(type);
-    const reportToDelete = data.reports.find((report) => report.id === id);
-    if (
-      reportToDelete &&
-      reportToDelete.typeOfTransaction === transactionType
-    ) {
-      data.reports.splice(data.reports.indexOf(reportToDelete), 1);
-    }
-
-    return { message: 'Report deleted' };
+    return this.appService.deleteReport(type, id);
   }
 
   @Put(':id')
@@ -76,6 +67,3 @@ export class AppController {
     return { message: 'Report updated', reportToUpdate };
   }
 }
-
-// controller is handling business logic
-// need to create a service to handle business logic

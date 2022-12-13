@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@nestjs/common';
-import { TypeOfTransaction } from './data';
+import { Report, TypeOfTransaction } from './data';
 import { data } from './data';
 import { getType } from './helper/getType';
 import { v4 as uuid } from 'uuid';
@@ -47,5 +47,18 @@ export class AppService {
     data.reports.push(newReport);
 
     return { message: 'Report created', newReport };
+  }
+
+  deleteReport(type: TypeOfTransaction, id: string) {
+    const transactionType = getType(type);
+    const reportToDelete = data.reports.find((report) => report.id === id);
+    if (
+      reportToDelete &&
+      reportToDelete.typeOfTransaction === transactionType
+    ) {
+      data.reports.splice(data.reports.indexOf(reportToDelete), 1);
+    }
+
+    return { message: 'Report deleted' };
   }
 }
