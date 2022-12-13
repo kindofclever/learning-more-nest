@@ -35,22 +35,7 @@ export class AppController {
     @Param('typeOfTransaction') type: TypeOfTransaction,
     @Body() body: { amount: number; source: string; currency: string },
   ) {
-    const newReport: Report = {
-      id: uuid(),
-      typeOfTransaction:
-        type === 'incomes'
-          ? TypeOfTransaction.INCOMES
-          : TypeOfTransaction.EXPENSES,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      source: body.source,
-      amount: body.amount,
-      currency: body.currency,
-    };
-
-    data.reports.push(newReport);
-
-    return { message: 'Report created', newReport };
+    return this.appService.createReport(type, body);
   }
 
   @HttpCode(204)
